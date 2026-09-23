@@ -22,22 +22,53 @@ Scope is only the claims the Service handoff guarantees. Mint-only fields
 (`source_app`, `extra_perms` — provenance / Field-only) are intentionally out of
 contract; eq-shell extends the type locally for those.
 
+## v0.2 — TenantBrandKit
+
+```ts
+import { TenantBrandKit, validateTenantBrandKit, NEUTRAL_BRAND_KIT } from '@eq-solutions/contracts'
+```
+
+The one shape every EQ surface uses for a tenant's brand when it renders a
+document, an email, or branded chrome. Design and rationale:
+`eq-context/eq/documents/branded-document-kit-design-2026-09-23.md`.
+
+- **`TenantBrandKit`** — `palette` (primary / deep / ice / ink, optional
+  accent; bare uppercase hex), `logos` (light / dark / mark, each with
+  **measured** `widthPx`/`heightPx` so nobody re-measures at render time),
+  `fonts` (`docBody` must be Calibri / Aptos / Arial — editable .docx files
+  leave the building), `legal` (the footer line source), `policy.flat`,
+  `complete`.
+- **`validateTenantBrandKit(input)`** — dependency-free runtime check, never
+  throws. Run it on the canonical RPC output, on normaliser output in tests,
+  and on any kit that crosses a process boundary.
+- **`NEUTRAL_BRAND_KIT`** — the fallback for incomplete tenant data.
+  Greyscale, no logo, system fonts. **Never** another tenant's brand; EQ's
+  own brand is just the `eq` tenant's row.
+- **`brand-kit.schema.json`** — JSON Schema (2020-12) mirror for non-TS
+  consumers (eq-cards / Dart). `npm test` asserts it matches the TS type.
+
+Producers: `@eq-solutions/documents` (`brand.normalise()`, from the raw
+`organisations.branding` jsonb) and the canonical RPC
+`eq_get_tenant_brand_kit` on eq-canonical. Consumers never build a kit by
+hand.
+
 ## Consuming
 
 Pinned by tag, matching the other `@eq-solutions/*` packages:
 
 ```json
-{ "dependencies": { "@eq-solutions/contracts": "github:eq-solutions/eq-contracts#v0.1.0" } }
+{ "dependencies": { "@eq-solutions/contracts": "github:eq-solutions/eq-contracts#v0.2.0" } }
 ```
 
-The repo ships the built `index.js` (runtime) and `index.ts` (types), so no
+The repo ships the built `index.js` / `brand-kit.js` (runtime) and the `.ts` files (types), so no
 `transpilePackages` or build step is needed in consumers.
 
 ## Developing
 
 ```sh
 npm install
-npm run build      # esbuild index.ts → index.js (commit both)
+npm run build      # esbuild index.ts + brand-kit.ts → .js (commit all four)
+npm test           # node:test — validator + schema/type parity
 npm run typecheck  # tsc --noEmit
 ```
 
