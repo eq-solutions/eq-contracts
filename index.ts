@@ -82,3 +82,6 @@ export function validateHandoffClaims(input: unknown): HandoffValidation {
   }
   return { ok: false, missing, invalid }
 }
+
+// v0.2 — TenantBrandKit (brand-kit.ts). Re-exported so `import { TenantBrandKit } from '@eq-solutions/contracts'` works.
+export * from './brand-kit.js'

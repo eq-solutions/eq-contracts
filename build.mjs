@@ -5,12 +5,12 @@
 import { build } from 'esbuild'
 
 await build({
-  entryPoints: ['index.ts'],
-  outfile: 'index.js',
+  entryPoints: ['index.ts', 'brand-kit.ts'],
+  outdir: '.',
   format: 'esm',
   platform: 'neutral',
   target: 'node18',
   bundle: false,
   logLevel: 'info',
 })
-console.log('built index.js')
+console.log('built index.js + brand-kit.js')

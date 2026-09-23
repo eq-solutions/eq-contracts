@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/eq-solutions/eq-contracts/brand-kit.schema.json",
+  "title": "TenantBrandKit",
+  "description": "The one shape every EQ surface uses for a tenant's brand when rendering documents, emails or chrome. Hand-maintained mirror of brand-kit.ts; test/brand-kit.test.mjs asserts the two agree.",
+  "type": "object",
+  "required": ["kitVersion", "tenant", "palette", "logos", "fonts", "legal", "policy", "complete"],
+  "additionalProperties": false,
+  "properties": {
+    "kitVersion": { "const": 1 },
+    "tenant": {
+      "type": "object",
+      "required": ["id", "slug", "legalName", "displayName"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "slug": { "type": "string", "minLength": 1 },
+        "legalName": { "type": "string", "minLength": 1 },
+        "displayName": { "type": "string", "minLength": 1 }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "required": ["primary", "deep", "ice", "ink"],
+      "additionalProperties": false,
+      "properties": {
+        "primary": { "$ref": "#/$defs/hex6" },
+        "deep": { "$ref": "#/$defs/hex6" },
+        "ice": { "$ref": "#/$defs/hex6" },
+        "ink": { "$ref": "#/$defs/hex6" },
+        "accent": { "$ref": "#/$defs/hex6" }
+      }
+    },
+    "logos": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "light": { "$ref": "#/$defs/logoAsset" },
+        "dark": { "$ref": "#/$defs/logoAsset" },
+        "mark": { "$ref": "#/$defs/logoAsset" }
+      }
+    },
+    "fonts": {
+      "type": "object",
+      "required": ["heading", "body", "docBody"],
+      "additionalProperties": false,
+      "properties": {
+        "heading": { "type": "string", "minLength": 1 },
+        "body": { "type": "string", "minLength": 1 },
+        "docBody": { "type": "string", "enum": ["Calibri", "Aptos", "Arial"] }
+      }
+    },
+    "legal": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "abn": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "web": { "type": "string" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["flat"],
+      "additionalProperties": false,
+      "properties": { "flat": { "const": true } }
+    },
+    "complete": { "type": "boolean" }
+  },
+  "$defs": {
+    "hex6": { "type": "string", "pattern": "^[0-9A-F]{6}$", "description": "Bare uppercase 6-digit hex, no '#'." },
+    "logoAsset": {
+      "type": "object",
+      "required": ["url", "widthPx", "heightPx", "mime"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "minLength": 1 },
+        "widthPx": { "type": "number", "exclusiveMinimum": 0 },
+        "heightPx": { "type": "number", "exclusiveMinimum": 0 },
+        "mime": { "type": "string", "enum": ["image/png", "image/svg+xml", "image/webp", "image/jpeg"] }
+      }
+    }
+  }
+}

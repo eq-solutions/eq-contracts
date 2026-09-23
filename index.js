@@ -22,6 +22,7 @@ function validateHandoffClaims(input) {
   }
   return { ok: false, missing, invalid };
 }
+export * from "./brand-kit.js";
 export {
   HANDOFF_REQUIRED_KEYS,
   validateHandoffClaims

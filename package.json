@@ -1,31 +1,61 @@
 {
   "name": "@eq-solutions/contracts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "license": "UNLICENSED",
   "author": "CDC Solutions Pty Ltd",
-  "description": "Canonical cross-app contracts for the EQ suite. v0.1: the Shell→Service login-handoff JWT app_metadata claim shape (ShellHandoffClaims) + a dependency-free runtime validator. Single source of truth imported by eq-shell (mint side) and eq-service (consume side), so the contract is enforced at compile time (shared type) and runtime (validator) on both ends.",
+  "description": "Canonical cross-app contracts for the EQ suite. v0.1: the Shell→Service login-handoff JWT app_metadata claim shape (ShellHandoffClaims) + a dependency-free runtime validator. v0.2: TenantBrandKit — the one shape every surface uses for a tenant's brand in documents/emails (palette, measured logos, fonts, legal footer) + validator + neutral fallback + JSON Schema for non-TS consumers (eq-cards). Imported by eq-shell, eq-service, eq-field (via @eq-solutions/documents) and eq-cards.",
   "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eq-solutions/eq-contracts.git"
   },
-  "keywords": ["eq-solutions", "contracts", "jwt", "auth", "handoff"],
+  "keywords": [
+    "eq-solutions",
+    "contracts",
+    "jwt",
+    "auth",
+    "handoff",
+    "brand",
+    "tenant",
+    "documents"
+  ],
   "main": "index.js",
   "types": "index.ts",
   "exports": {
-    ".": { "types": "./index.ts", "default": "./index.js" },
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.js"
+    },
+    "./brand-kit": {
+      "types": "./brand-kit.ts",
+      "default": "./brand-kit.js"
+    },
+    "./brand-kit.schema.json": "./brand-kit.schema.json",
     "./package.json": "./package.json"
   },
-  "files": ["index.js", "index.ts", "build.mjs", "README.md"],
+  "files": [
+    "index.js",
+    "index.ts",
+    "brand-kit.js",
+    "brand-kit.ts",
+    "brand-kit.schema.json",
+    "build.mjs",
+    "README.md"
+  ],
   "scripts": {
     "build": "node build.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.24.0",
     "typescript": "^5"
   },
-  "publishConfig": { "access": "restricted" },
-  "engines": { "node": ">=18" }
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }
